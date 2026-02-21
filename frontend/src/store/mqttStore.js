@@ -16,7 +16,7 @@ export const useMqttStore =  defineStore('mqtt', ()=>{
 
     // STATES 
     const mqtt              = ref(null);
-    const host              = ref("dbs.msjrealtms.com");  // Host Name or IP address
+    const host              = ref("www.yanacreations.com");  // Host Name or IP address
     const port              = ref(9002);  // Port number
     const payload           = ref({"id":620012345,"timestamp": 1702566538,"number":0,"ledA":0,"ledB":0}); // Set initial values for payload
     const payloadTopic      = ref("");
@@ -27,8 +27,15 @@ export const useMqttStore =  defineStore('mqtt', ()=>{
     // ACTIONS
     
     const onSuccess = ()=> {
+        console.log(`MQTT: Initial connection successful`);
+
+    // 🔹 SUBSCRIBE TO YOUR DATA TOPIC HERE
+    subscribe("620162191");   // replace with your actual topic
+
+    console.log("Subscribed to topic: 620162191");
         // called when the connect acknowledgement has been received from the server.
-        // console.log(`Connected to: ${host.value}`);      
+        // console.log(`Connected to: ${host.value}`);    
+        subscribe("620162191");  
     }
 
     const onConnected = (reconnect,URI)=> {
@@ -124,13 +131,13 @@ export const useMqttStore =  defineStore('mqtt', ()=>{
         console.log(`MQTT: Failed to unsubscribe from - ${topic} \nError message : ${response.errorMessage}`);  
         }
 
-    const unsubcribe = (topic) => {     
+    const unsubscribe = (topic) => {     
         // Unsubscribe for messages, stop receiving messages sent to destinations described by the filter.      
         var unsubscribeOptions	 = { onSuccess: unSub_onSuccess, onFailure: unSub_onFailure, invocationContext:{"topic":topic} }
         mqtt.value.unsubscribe(topic, unsubscribeOptions);         
         }
     
-    const unsubcribeAll = () => {   
+    const unsubscribeAll = () => {   
         // Unsubscribe for messages, stop receiving messages sent to destinations described by the filter.      
         const topics = Object.keys(subTopics.value);
         if(topics.length > 0) {
@@ -176,8 +183,8 @@ export const useMqttStore =  defineStore('mqtt', ()=>{
         payload,
         payloadTopic,
         subscribe,
-        unsubcribe,
-        unsubcribeAll,
+        unsubscribe,
+        unsubscribeAll,
         publish,
         connect,
         disconnect,

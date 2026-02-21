@@ -131,6 +131,10 @@ class Ntp {
 void vNTP( void * pvParameters ) {
   configASSERT( ( ( uint32_t ) pvParameters ) == 1 );   
   Ntp NTP = Ntp("NTP PROTOCOL INITIATED"); // Instatiate NTP Class
+   while(WiFi.status() != WL_CONNECTED){
+    vTaskDelay(1000/ portTICK_PERIOD_MS);
+  }
+
   NTP.setup(); // Config NTP
  
  for( ;; ) {  
@@ -151,7 +155,7 @@ void vNTPFunction( void ) {
     xReturned = xTaskCreatePinnedToCore(
                     vNTP,               // Function that implements the task. 
                     "NTP Protocol",     // Text name for the task. 
-                    1500,               // Stack size (Bytes in ESP32, words in Vanilla FreeRTOS) 
+                    8192,               // Stack size (Bytes in ESP32, words in Vanilla FreeRTOS) 
                     ( void * ) 1,       // Parameter passed into the task. 
                     12,                  // Priority at which the task is created. 
                     &xNTPHandle,        // Used to pass out the created task's handle. 
